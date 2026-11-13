@@ -1,0 +1,109 @@
+================================================
+ NAVREP ENVIRONMENT - FINAL HANDOFF AUDIT
+================================================
+Fri Nov 13 10:19:35 UTC 2026
+
+=== 1. OPERATING ENVIRONMENT ===
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+Python 3.6.15
+pip 21.2.4 from /usr/local/lib/python3.6/site-packages/pip (python 3.6)
+
+=== 2. REQUIRED HANDOFF FILES ===
+PASS: README.md (8.0K)
+PASS: README_SETUP.md (8.0K)
+PASS: setup/requirements-container.txt (4.0K)
+PASS: setup/DEPENDENCIES_HANDOFF.md (4.0K)
+PASS: setup/patches/pepper_2d_simulator_dtype.patch (4.0K)
+
+=== 3. PYTHON PACKAGE CONSISTENCY ===
+soadrl-crowdnav 0.0.3 requires gitpython, which is not installed.
+gym 0.15.7 has requirement cloudpickle~=1.2.0, but you have cloudpickle 1.6.0.
+gym 0.15.7 has requirement pyglet<=1.5.0,>=1.4.0, but you have pyglet 1.5.22.
+pip check exit code: 1
+
+=== 4. IMPORTANT MODULE IMPORTS ===
+PASS: navrep
+PASS: numpy
+PASS: gym
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:526: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:527: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:528: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:529: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:530: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:535: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+PASS: tensorflow
+PASS: torch
+PASS: Cython
+FAIL: pymap2d - ModuleNotFoundError No module named 'pymap2d'
+PASS: pyniel
+PASS: rvo2
+PASS: range_libc
+PASS: CMap2D
+PASS: pepper_2d_simulator
+PASS: pyIA
+
+=== 5. MAP RESOURCE CHECK ===
+Map directory: /root/Code/asl_pepper_2d_sim_maps/asl_pepper_2d_sim_maps/maps
+PASS: marksimple.yaml
+PASS: marktrain.yaml
+
+=== 6. MARKENV LIVE TEST ===
+/usr/local/lib/python3.6/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32[0m
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+PASS: MarkEnv created
+PASS: reset; observation shapes: (1080,) (5,)
+PASS: one step; returned 4 items
+PASS: RGB rendering; shape: (125, 125, 3)
+Environment closed.
+
+=== 7. FULL TRAINING ENVIRONMENT TEST ===
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:526: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:527: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:528: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:529: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:530: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:535: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+KNOWN LIMITATION / FAIL: ModuleNotFoundError No module named 'a'
+
+=== 8. SIMULATOR PATCH AND BACKUP ===
+-rw-r--r-- 1 root root 84K Nov 13 09:38 /root/Code/interaction_actions_for_navigation/external/asl_pepper/asl_pepper_2d_simulator/python/pepper_2d_simulator.py
+-rw-r--r-- 1 root root 84K Nov 13 09:32 /root/Code/interaction_actions_for_navigation/external/asl_pepper/asl_pepper_2d_simulator/python/pepper_2d_simulator.py.bak
+Saved patch:
+-rw-r--r-- 1 root root 1.7K Nov 13 10:12 setup/patches/pepper_2d_simulator_dtype.patch
+
+=== 9. REPOSITORY STATUS ===
+?? Dockerfile
+?? README_SETUP.md
+?? markclutter_random_demo.gif
+?? markenv_goal_controller.py
+?? markenv_test.png
+?? navigation_demo.gif
+?? record_navigation.py
+?? setup/
+
+=== 10. FINAL HANDOFF FILE LIST ===
+setup/DEPENDENCIES_HANDOFF.md (2140 bytes)
+setup/FINAL_ENV_CHECK.txt (6106 bytes)
+setup/patches/pepper_2d_simulator_dtype.patch (1672 bytes)
+setup/requirements-container.txt (1675 bytes)
+
+================================================
+ AUDIT FINISHED
+ Report: /workspace/navrep/setup/FINAL_ENV_CHECK.txt
+================================================

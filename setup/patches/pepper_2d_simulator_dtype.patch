@@ -1,0 +1,31 @@
+--- /root/Code/interaction_actions_for_navigation/external/asl_pepper/asl_pepper_2d_simulator/python/pepper_2d_simulator.py.bak	2026-11-13 09:32:20.250205316 +0000
++++ /root/Code/interaction_actions_for_navigation/external/asl_pepper/asl_pepper_2d_simulator/python/pepper_2d_simulator.py	2026-11-13 09:38:15.564748577 +0000
+@@ -155,9 +155,10 @@
+         cmd_vel should be of shape (3,), in SI units
+         """
+         with self.lock:
+-            self.target_vel = fast_3f_clip(np.array(cmd_vel),
+-                                      -self.kMaxVel,
+-                                      self.kMaxVel)
++            self.target_vel = fast_3f_clip(
++                np.asarray(cmd_vel, dtype=np.float64),
++                -np.asarray(self.kMaxVel, dtype=np.float64),
++                np.asarray(self.kMaxVel, dtype=np.float64))
+ 
+     def odom_callback(self, event=None, dt=None, publish_tf=True):
+         from nav_msgs.msg import Odometry
+@@ -1508,12 +1509,12 @@
+ 
+ 
+     def normalized_to_cmd_vel(self, actions):
+-        actions_as_cmd_vel = np.zeros_like(actions)
++        actions_as_cmd_vel = np.zeros_like(actions, dtype=np.float64)
+         # clip
+         norm_actions = np.clip(actions, -1, 1)
+         for i, (vp, norm_action) in enumerate(zip(self.virtual_peppers, norm_actions)):
+             # make sure the xy norm is not larger than max vel otherwise diagonal is faster
+-            xy_norm = fast_2f_norm(norm_action[:2])
++            xy_norm = fast_2f_norm(np.asarray(norm_action[:2], dtype=np.float64))
+             if xy_norm > 1:
+                 norm_action[0] = norm_action[0] / xy_norm
+                 norm_action[1] = norm_action[1] / xy_norm
