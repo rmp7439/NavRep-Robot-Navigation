@@ -116,3 +116,17 @@ These tests confirm basic environment initialization, reset, observation generat
 Member 2 is responsible for inspecting and documenting the robot model, movement limits, collision radius, sensor configuration, action interface and initial environment behavior.
 
 This documentation provides the robot-related information needed by the navigation and obstacle-configuration team members.
+
+## Runtime Movement Verification
+
+The robot configuration was tested using the MarkEnv environment.
+
+| Test | Command action | Observed result | Status |
+|---|---|---|---|
+| Forward movement | [0.5, 0.0, 0.0] for 3 steps | 0.4125 m accumulated forward movement | Passed |
+| Rotation | [0.0, 0.0, 0.5] for 3 steps | Angular velocity 1.0 rad/s; accumulated angular movement 1.5 rad | Passed |
+| Stop | [0.0, 0.0, 0.0] | Linear and angular velocities became zero | Passed |
+
+All three tests completed without terminating the episode.
+
+These tests verify that the configured robot can move forward, rotate in place, and stop using the normalized MarkEnv action interface.
