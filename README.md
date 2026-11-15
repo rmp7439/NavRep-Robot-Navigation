@@ -10,15 +10,15 @@
 
 ## 1. Group Members
 
-| Sr. No. | Student Name | Roll Number | Role / Contribution |
+| Sr. No. | Student Name | Roll Number | Role / Task Contribution |
 |---|---|---|---|
-| 1 | [Name 1] | [U22CSxxx] | Environment setup, Docker container, dependency installation |
-| 2 | [Name 2] | [U22CSxxx] | Robot model parameters, velocity limits, collision radius |
-| 3 | [Name 3] | [U22CSxxx] | Scenario start/goal design, Dijkstra path planning |
-| 4 | [Name 4] | [U22CSxxx] | Obstacle design and dynamic map generation |
-| 5 | [Name 5] | [U22CSxxx] | Environment integration (`OfficeScenarioEnv`), CLI scripts |
-| 6 | [Name 6] | [U22CSxxx] | Proportional controller, navigation execution, video recording |
-| 7 | [Name 7] | [U22CSxxx] | Unit testing, test suite verification, report preparation |
+| 1 | Rudra Manish Patni | U24CS074 | **Task 1:** Environment setup, Docker container, dependency installation & build documentation |
+| 2 | Ridham Jain | U24CS078 | **Task 2:** Testing existing NavRep simulation scenarios & recording baseline videos |
+| 3 | Ayushman Singh | U24CS103 | **Task 3:** Custom scenario start/goal design & Dijkstra path planning (`office_scenarios.py`) |
+| 4 | Mori Aryan Ashokbhai | U24CS080 | **Task 4:** Obstacle design, geometric modeling & dynamic map augmentation (`office_obstacles.py`) |
+| 5 | Sivahari Prakash Babu | U24CS005 | **Task 5:** Environment integration (`OfficeScenarioEnv`) & CLI scripts (`play_office_scenario.py`) |
+| 6 | Janav Rana | U24CS039 | **Task 6:** Closed-loop proportional controller, autonomous execution & video production (`record_office_scenarios.py`) |
+| 7 | Patel Vinay Atulkumar | U24CS077 | **Task 7:** Comprehensive test suite verification (78/78 tests passing) & submission preparation |
 
 ---
 

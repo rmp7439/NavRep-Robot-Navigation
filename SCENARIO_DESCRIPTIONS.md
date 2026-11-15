@@ -1,4 +1,21 @@
-# Office Assistance Robot: Custom Scenario Descriptions (Task 3)
+# SARDAR VALLABHBHAI NATIONAL INSTITUTE OF TECHNOLOGY, SURAT
+## DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING
+### CS359: Artificial Intelligence for Robotics | B.Tech. (CSE) IIIrd Year
+**Assignment:** NavRep – Robot Navigation and Simulation (Task 3: Custom Scenarios)  
+**Date:** 15 November 2026  
+
+### Team Members:
+- **Rudra Manish Patni (U24CS074)** – Setup & Environment (Task 1)
+- **Ridham Jain (U24CS078)** – Existing Scenario Testing (Task 2)
+- **Ayushman Singh (U24CS103)** – Custom Scenario Start/Goal Navigation (Task 3)
+- **Mori Aryan Ashokbhai (U24CS080)** – Custom Obstacle Design & Map Augmentation (Task 4)
+- **Sivahari Prakash Babu (U24CS005)** – Environment Integration & CLI (Task 5)
+- **Janav Rana (U24CS039)** – Autonomous Waypoint Controller & Video Recording (Task 6)
+- **Patel Vinay Atulkumar (U24CS077)** – Verification & Quality Assurance (Task 7)
+
+---
+
+# Office Assistance Robot: Custom Scenario Descriptions
 
 ## Project Overview
 This project extends ETH Zurich's **NavRep** framework to deploy an autonomous **Office Assistance Robot** navigating within a realistic indoor workplace environment based on the `asl_office_j` floor plan (54.7 m × 25.6 m, 0.02 m/pixel resolution).
