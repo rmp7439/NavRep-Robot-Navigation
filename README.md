@@ -1,211 +1,169 @@
+# SARDAR VALLABHBHAI NATIONAL INSTITUTE OF TECHNOLOGY, SURAT
+## DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING
+### CS359: Artificial Intelligence for Robotics | B.Tech. (CSE) IIIrd Year
+**Assignment:** NavRep – Robot Navigation and Simulation  
+**Project:** Office Assistance Robot Simulation  
+**Date:** 15 November 2026  
+**Upstream Base:** https://github.com/ethz-asl/navrep  
 
-| <img src="wiki/media/guldenring_test.png" width="400"/> <br> **New 24/11/20: we compared the Guldenring et al. pretrained models (IROS 2020), see [here](wiki/testing_your_models_in_navrep.md).** |
-| ------------------------ |
+---
 
-# NavRep
-![varch](media/varch.gif)
+## 1. Group Members
 
-This is the official repository for the NavRep [paper](https://arxiv.org/pdf/2012.04406.pdf). it contains:
-- a simulator aimed at allowing anyone to easy reproduce and improve on the state-of-the-art of RL for robot navigation.
-- a suite for unsupervised-learning-assisted RL for robot navigation. It contains tools, datasets, models which allow you to easily reproduce findings from our paper.
+| Sr. No. | Student Name | Roll Number | Role / Contribution |
+|---|---|---|---|
+| 1 | [Name 1] | [U22CSxxx] | Environment setup, Docker container, dependency installation |
+| 2 | [Name 2] | [U22CSxxx] | Robot model parameters, velocity limits, collision radius |
+| 3 | [Name 3] | [U22CSxxx] | Scenario start/goal design, Dijkstra path planning |
+| 4 | [Name 4] | [U22CSxxx] | Obstacle design and dynamic map generation |
+| 5 | [Name 5] | [U22CSxxx] | Environment integration (`OfficeScenarioEnv`), CLI scripts |
+| 6 | [Name 6] | [U22CSxxx] | Proportional controller, navigation execution, video recording |
+| 7 | [Name 7] | [U22CSxxx] | Unit testing, test suite verification, report preparation |
 
-### Publication
+---
 
-Daniel Dugas, Juan Nieto, Roland Siegwart and Jen Jen Chung, **NavRep: Unsupervised Representations for Reinforcement Learning of Robot Navigation in Dynamic Human Environments**, *Pending review, 2020* - [pdf](https://arxiv.org/pdf/2012.04406.pdf)
+## 2. Operating System & Environment
 
-## Pre-requisites
-Python 3.6
+- **Host OS:** Windows 10 / 11 (64-bit)
+- **Container Platform:** Docker Desktop with WSL2 backend
+- **Container OS:** Debian GNU/Linux 10 (Buster)
+- **Python Version:** Python 3.6.15 (64-bit)
+- **Compiler:** GCC 8.3.0 (`build-essential`)
 
-For example, on Ubuntu 20
+---
 
-```
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install -y python3.6 python3.6-dev
-sudo apt-get install -y virtualenv python3-virtualenv
-```
+## 3. Dependencies & Installation
 
-We recommend creating a virtualenv:
+NavRep requires legacy Python 3.6 due to dependencies like Gym 0.20, Pyglet 1.5, and older Cython extensions.
 
-```
-virtualenv ~/navrepvenv --python=python3.6
-source ~/navrepvenv/bin/activate
-```
+### Required Packages:
+- `numpy==1.19.5`
+- `PyYAML==6.0`
+- `Pillow==8.4.0`
+- `matplotlib==3.3.4`
+- `scipy==1.5.4`
+- `pandas==1.1.0`
+- `Cython==0.29.28`
+- `gym==0.20.0`
+- `pyglet==1.5.22`
+- `numba==0.53.1`
+- `pytest==7.0.1`
+- System packages: `libglu1-mesa`, `ffmpeg`, `libgl1-mesa-glx`
 
-rospy:
+### Setup Commands (inside Docker):
+```bash
+# 1. Install system utilities
+apt-get update && apt-get install -y build-essential git ffmpeg libglu1-mesa libgl1-mesa-glx
 
-```
-pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag tf tf2_ros
-```
+# 2. Install Python dependencies
+pip install numpy==1.19.5 PyYAML==6.0 Pillow==8.4.0 matplotlib==3.3.4 scipy==1.5.4 pandas==1.1.0 Cython==0.29.28 gym==0.20.0 pyglet==1.5.22 numba==0.53.1 pytest==7.0.1
 
-specific versions of Keras, gym (later versions cause errors with some user-facing scripts)
+# 3. Build native C/Cython extensions
+pip install --no-build-isolation pyrangelibc-danieldugas==0.0.2
 
-```
-pip install gym==0.15.7 keras==2.3.1
-```
+# 4. Install Pepper simulator and map package
+cd /root/Code/interaction_actions_for_navigation/external/asl_pepper/asl_pepper_2d_simulator && pip install -e .
+cd /root/Code/asl_pepper_2d_sim_maps && pip install -e .
+cd /workspace/navrep && pip install -e .
 
-## Install
-
-Installing navrep is as simple as
-
-```
-pip install navrep
-```
-
-## Try it!
-
-```
-python -m navrep.envs.navreptrainenv
-```
-
-Press `w, a, s, d` to move around, `shift` to speed up the simulation.
-
-## NavRepSim
-
-### NavRep training environment
-
-![trainenv](media/trainenv.gif)
-
-### NavRep testing environment
-
-![testenv1](media/testenv1.gif)
-![testenv2](media/testenv2.gif)
-![testenv3](media/testenv3.gif)
-
-### SOADRL
-
-![soadrlenv](media/soadrlenv.gif)
-
-### CrowdMove
-
-![crowdmoveenv1](media/crowdmoveenv1.gif)
-
-![crowdmoveenv2](media/crowdmoveenv2.png)
-![crowdmoveenv3](media/crowdmoveenv3.png)
-![crowdmoveenv4](media/crowdmoveenv4.png)
-![crowdmoveenv5](media/crowdmoveenv5.png)
-![crowdmoveenv6](media/crowdmoveenv6.png)
-
-### Pfeiffer et al.
-
-![markenv1](media/markenv1.gif)
-![markenv2](media/markenv2.gif)
-
-
-## Reproducing NavRep
-
-The following is an example of how to reproduce the results in the NavRep paper.
-It is a subset of the full procedure, which can be found in the [workflow_navrep.sh](navrep/scripts/workflow_navrep.sh) file.
-
-### make a V dataset
-
-```
-python -m navrep.scripts.make_vae_dataset --environment navreptrain --render
+# 5. Apply simulator float64 patch
+cd / && patch -p0 < /workspace/navrep/setup/patches/pepper_2d_simulator_dtype.patch
 ```
 
-(remove `--render` argument to speed up data generation)
+---
 
-### train V
+## 4. Code Modifications
 
+1. **`navrep/envs/officeenv.py`:**
+   - Created `OfficeScenarioEnv` as a clean subclass of `MarkEnv`.
+   - Allows setting fixed start poses `[x, y, theta]` and goal poses `[x, y]`.
+   - The original `MarkEnv` and `PepperRLEnv` remain unmodified.
+
+2. **`navrep/envs/office_obstacles.py`:**
+   - SoftBank Pepper simulator reads obstacles only from static occupancy maps at startup.
+   - Built an obstacle generator that takes obstacle shapes (rectangles, circles) and draws them into a temporary copy of `asl_office_j.pgm` in `/tmp/`.
+   - The copy is deleted automatically when `env.close()` is called.
+
+3. **`navrep/envs/office_scenarios.py`:**
+   - Defined 3 office assistance scenarios with verified start and goal coordinates.
+   - Added Dijkstra search on inflated grid to compute shortest path lengths and check 0.50m robot clearance.
+
+4. **`navrep/scripts/record_office_scenarios.py`:**
+   - Implemented a closed-loop waypoint tracking controller:
+     ```python
+     omega = float(np.clip(0.85 * angle_err, -1.0, 1.0))
+     speed_factor = max(0.2, math.cos(angle_err))
+     vx = 0.75 * speed_factor
+     ```
+   - Automatically drives the robot, records frames, and encodes them to MP4 using ffmpeg.
+
+5. **`navrep/envs/markenv.py`:**
+   - Fixed `TypeError: render() got an unexpected keyword argument 'save_to_file'` in `render()` so standard rendering calls work without crashing.
+
+6. **Map YAML relative paths (`maps/cla_glass_hall.yaml`):**
+   - Replaced hardcoded `/home/daniel/maps/` paths with relative map paths so they load portably across different systems.
+
+---
+
+## 5. Challenges Encountered & Fixes
+
+1. **Cython build error on modern pip:**
+   - *Error:* `pyrangelibc` failed to build because Python 2 print syntax was rejected under build isolation.
+   - *Fix:* Passed `--no-build-isolation` to pip so it uses Cython 0.29 with language level 2 compatibility.
+
+2. **Simulator array dtype crash:**
+   - *Error:* Cython extensions (`fast_2f_norm`, `fast_3f_clip`) expected double-precision `float64` pointers, while NumPy passed `float32`.
+   - *Fix:* Applied `pepper_2d_simulator_dtype.patch` to explicitly cast vectors to `float64`.
+
+3. **Angular oscillation bug:**
+   - *Error:* The initial controller used a bang-bang switch ($\pm 1.0$ rad/s). Because $DT=0.5$s and $kMaxVel=2.0$ rad/s, each step rotated the robot by exactly $1.0$ rad ($57^\circ$), causing it to oscillate back and forth forever.
+   - *Fix:* Replaced bang-bang steering with proportional error scaling ($0.85 \times \Delta\theta$), giving smooth exponential convergence to waypoints.
+
+4. **Visual map transposition mismatch:**
+   - *Error:* In `CMap2D`, the grid is indexed as `(2736, 1280)` with Dimension 0 as $X$ and Dimension 1 as $Y$. Drawing directly to image coordinates without transposing caused the background map to be squished sideways while coordinates were plotted upright.
+   - *Fix:* Transposed and vertically flipped the occupancy grid with `np.flipud(m.occupancy().T)` so image axes match world coordinates.
+
+---
+
+## 6. How to Run
+
+Run these commands inside the Docker container:
+
+### Run Unit Tests
+```bash
+python -m pytest tests/test_office_scenarios.py tests/test_office_obstacles.py tests/test_office_integration.py -v
 ```
-python -m navrep.scripts.train_vae --environment navreptrain
+*(All 78 tests should pass)*
+
+### Run Scenario Validation (No physics needed)
+```bash
+python -m navrep.scripts.play_office_scenario --scenario document_delivery --check
+python -m navrep.scripts.play_office_scenario --scenario pantry_assistance --check
+python -m navrep.scripts.play_office_scenario --scenario meeting_room_assistance --check
 ```
 
-### train M
-
-```
-python -m navrep.scripts.make_rnn_dataset --environment navreptrain
-python -m navrep.scripts.train_rnn --environment navreptrain
+### Run Headless Simulation
+```bash
+python -m navrep.scripts.play_office_scenario --scenario document_delivery --headless --steps 100
 ```
 
-### Play encoded environment
-
+### Record All Custom Scenarios Automatically
+```bash
+python -m navrep.scripts.record_office_scenarios
 ```
-python -m navrep.scripts.play_navreptrainencodedenv --backend VAE_LSTM --encoding V_ONLY
-```
+Videos will be saved directly into `videos/`.
 
-### Play dream environment
+---
 
-### Train C
+## 7. Results Summary
 
-```
-python -m navrep.scripts.train_gym_navreptrainencodedenv --backend VAE_LSTM --encoding V_ONLY
-```
+### Task 2: Existing Scenarios
+- `videos/existing_scenario_asl_office_j.mp4`: Tested standard NavRep `MarkEnv` in office floor.
+- `videos/existing_scenario_hg_main_hall.mp4`: Tested standard NavRep in open hall.
 
-### Test C
-
-```
-python -m navrep.scripts.cross_test_navreptrain_in_ianenv --backend VAE_LSTM --encoding V_ONLY --render
-```
-
-![traj](media/traj_gpt.png)
-
-### Run in ROS node
-
-```
-roslaunch launch/sim_and_navrep.launch
-```
-
-
-
-## Using NavRep with your own models / environments
-
-- [Testing your model in the NavRep test environment](wiki/testing_your_models_in_navrep.md)
-
-
-## Pre-trained NavRep models
-
-![models](media/arch_overview2.png)
-
-all models shown in the paper are available [here](models).
-
-Copy the models from the V, M (modular archs) W (joint and transformer archs) and gym (C module) folders to your home directory according to the following structure:
-```
-~/navrep/
-  └── models
-      ├── gym
-      ├── M
-      └── V
-```
-
-run the following, and the models inside the ~/navrep directory will be tested in the navrep test environment:
-
-```
-python -m navrep.scripts.cross_test_navreptrain_in_ianenv --backend VAE_LSTM --encoding V_ONLY --render
-```
-
-flags:
-
-```--backend```
-
-- `VAE1D_LSTM` (Modular V, M with 1D lidar representation)
-- `VAE_LSTM` (Modular V, M with rings lidar representation)
-- `VAE1DLSTM` (Joint V+M with 1D lidar representation)
-- `VAELSTM` (Joint V+M with rings lidar representation)
-- `GPT1D` (Transformer with 1D lidar representation)
-- `GPT` (Transformer with rings lidar representation)
-- `E2E1D` (End-to-end with 1D lidar representation)
-- `E2E` (End-to-end with rings lidar representation)
-
-```--encoding```
-
-- `V_ONLY` (a.k.a only z features)
-- `M_ONLY` (a.k.a only h features)
-- `VM` (a.k.a z+h features)
-- `VCARCH` (for End-to-end only, specifies convolutional architecture)
-- `CARCH` (for End-to-end only, specifies small architecture)
-
-##  Tested NavRep training regimes
-
-| **Environments**            | **Modular V, M**                  | **Joint V+M**                    | **Transformer V+M**              |
-| --------------------------- | --------------------------------- | --------------------------------- | --------------------------------- |
-| NavRep train                | :heavy_check_mark:                | :heavy_check_mark:                | :heavy_check_mark:                |
-| NavRep test                 | :heavy_check_mark:                | :heavy_check_mark:                | :heavy_check_mark:                |
-| SOADRL                      | :heavy_check_mark:                | :heavy_check_mark:                | :heavy_check_mark:                |
-| Pfeiffer                    | :heavy_check_mark:                | :heavy_check_mark:                | :heavy_check_mark:                |
-| CrowdMove                   | :heavy_minus_sign:                | :heavy_minus_sign:                | :heavy_minus_sign:                |
-
-
-## Credits
-
-This library was written primarily by Daniel Dugas. The transformer block codes, and vae/lstm code were taken or heavily derived from world models and karpathy's mingpt. We've retained the copyright headers for the relevant files.
+### Task 3: Custom Office Assistance Scenarios
+| Scenario | Start Position | Goal Position | Obstacles | Path Length | Steps | Collision Damage | Status | Output Video |
+|---|---|---|---|---|---|---|---|---|
+| **Document Delivery** | Reception `(-23.3, -0.7)` | Meeting Room `(13.9, 2.4)` | Chair, delivery boxes | 41.0 m | 198 | **0.00** | **Goal Reached** | `videos/document_delivery.mp4` |
+| **Pantry Assistance** | Cabin `(-11.0, 5.1)` | Pantry `(5.0, -1.0)` | Cabinet, cleaning trolley | 23.3 m | 112 | **0.00** | **Goal Reached** | `videos/pantry_assistance.mp4` |
+| **Meeting Room Assistance** | Charging Stn `(-1.5, 2.5)` | Meeting Room `(13.9, 2.4)` | Printer table, spare chair | 19.5 m | 94 | **0.00** | **Goal Reached** | `videos/meeting_room_assistance.mp4` |

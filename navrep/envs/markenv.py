@@ -109,8 +109,11 @@ class MarkEnv(gym.Env):
         return obs
 
     def render(self, mode="human", close=False, lidar_scan_override=None, save_to_file=False):
-        self.rlenv.render(mode=mode, close=close, lidar_scan_override=lidar_scan_override,
-                          save_to_file=save_to_file)
+        try:
+            self.rlenv.render(mode=mode, close=close, lidar_scan_override=lidar_scan_override,
+                              save_to_file=save_to_file)
+        except TypeError:
+            self.rlenv.render(mode=mode, close=close, lidar_scan_override=lidar_scan_override)
 
     def close(self):
         try:
