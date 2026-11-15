@@ -26,6 +26,9 @@ import numpy as np
 from navrep.envs.office_scenarios import (OccupancyMap, default_map_folder, get_office_scenario,
                                           validate_pose, SCENARIO_NAMES, DEFAULT_MIN_CLEARANCE)
 
+# prefix of the temporary folders holding obstacle-augmented map copies
+TEMP_MAP_PREFIX = "navrep_office_obstacles_"
+
 NO_OBSTACLES = "none"
 SCENARIO_OBSTACLES = "scenario"
 OBSTACLE_MODES = [SCENARIO_OBSTACLES, NO_OBSTACLES]
@@ -251,7 +254,7 @@ def write_augmented_map(map_folder, map_name, obstacles, out_folder=None, out_na
     import yaml
     from PIL import Image
     if out_folder is None:
-        out_folder = tempfile.mkdtemp(prefix="navrep_office_obstacles_")
+        out_folder = tempfile.mkdtemp(prefix=TEMP_MAP_PREFIX)
     if out_name is None:
         out_name = map_name + "_with_obstacles"
     if os.path.abspath(out_folder) == os.path.abspath(map_folder) and out_name == map_name:

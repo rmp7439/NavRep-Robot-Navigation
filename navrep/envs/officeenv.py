@@ -20,13 +20,17 @@ that copy. Default is no additional obstacles (unchanged behaviour).
 Python 3.6 compatible.
 """
 from __future__ import print_function
+import os
+import shutil
+import tempfile
+
 import numpy as np
 
 from navrep.envs.markenv import MarkEnv, parse_PepperRLEnv_args, PepperRLEnv, check_PepperRLEnv_args
 from navrep.envs.office_scenarios import (get_office_scenario, validate_scenario, validate_pose,
                                           OccupancyMap, DEFAULT_MIN_CLEARANCE)
 from navrep.envs.office_obstacles import (get_obstacles, validate_obstacles, write_augmented_map,
-                                          NO_OBSTACLES)
+                                          NO_OBSTACLES, TEMP_MAP_PREFIX)
 
 REQUIRED_RLENV_METHODS = ["_reset_agents", "_set_agents_pos", "_set_agents_goals", "step"]
 
@@ -82,6 +86,9 @@ class OfficeScenarioEnv(MarkEnv):
     def _make_env(self, set_scenario=None):
         if not self.obstacles:
             return super(OfficeScenarioEnv, self)._make_env(set_scenario=set_scenario)
+        if set_scenario is not None and set_scenario != self.map_name:
+            raise ValueError("set_scenario='{}' is not supported with obstacles enabled (obstacles are "
+                             "configured for map '{}')".format(set_scenario, self.map_name))
         # same as MarkEnv._make_env, except map_folder / map_name point to the augmented map copy
         try:
             self.rlenv.close()
@@ -108,6 +115,20 @@ class OfficeScenarioEnv(MarkEnv):
         check_PepperRLEnv_args(args)
         self.rlenv = PepperRLEnv(args, silent=self.silent)
         self.rlenv.virtual_peppers[0].NO_INERTIA = True
+
+    def close(self):
+        super(OfficeScenarioEnv, self).close()
+        self._remove_obstacle_map()
+
+    def _remove_obstacle_map(self):
+        """ deletes the temporary obstacle map copy written by _make_env (never the original map) """
+        if self.obstacle_map is None:
+            return
+        folder = os.path.abspath(self.obstacle_map[0])
+        if os.path.basename(folder).startswith(TEMP_MAP_PREFIX) and \
+                os.path.dirname(folder) == os.path.abspath(tempfile.gettempdir()):
+            shutil.rmtree(folder, ignore_errors=True)
+        self.obstacle_map = None
 
     def _validate_poses(self):
         """ checks against the map file actually loaded by the simulator """

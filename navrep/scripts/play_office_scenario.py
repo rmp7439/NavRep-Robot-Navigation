@@ -97,17 +97,22 @@ def main(argv=None):
     env = OfficeScenarioEnv(scenario=args.scenario, silent=args.silent,
                             max_episode_length=args.max_episode_length,
                             obstacles=args.obstacles)
+    print("simulator map: {} (folder {})".format(env.rlenv.args.map_name, env.rlenv.args.map_folder))
+    print("active obstacles: {}".format(", ".join(o["name"] for o in env.obstacles) or "none"))
     if args.headless:
+        obs = env.reset()
         vp = env.rlenv.virtual_peppers[0]
         print("after reset: robot pos {}  goal {}".format(np.round(vp.pos, 3),
                                                          np.round(env.rlenv.agent_goals[0], 3)))
-        for i in range(args.steps):
+        n_steps = 0
+        for _ in range(max(args.steps, 0)):
             obs, rew, done, info = env.step(np.zeros(3))
+            n_steps += 1
             if done:
-                print("episode ended at step {} (info: {})".format(i + 1, info))
+                print("episode ended at step {} (info: {})".format(n_steps, info))
                 break
         print("after {} zero-action steps: robot pos {}  damage {}".format(
-            i + 1, np.round(vp.pos, 3), env.rlenv.episode_damage[0]))
+            n_steps, np.round(vp.pos, 3), env.rlenv.episode_damage[0]))
         print("observation shapes: scan {}  robotstate {}".format(obs[0].shape, obs[1].shape))
         env.close()
         return 0
